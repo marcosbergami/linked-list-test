@@ -19,7 +19,7 @@ jobs:
           run: g++ -I ./ *.cpp
         
         - name: Install Valgrind
-          run: sudo apt-get install valgrind
+          run: brew install valgrind
 
         - name: Run Valgrind
           run: |

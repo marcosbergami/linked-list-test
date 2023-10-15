@@ -16,13 +16,15 @@ jobs:
         #     compiler: 'gcc'
 
         - name: Compile
-          run: g++ -o program program.cpp
+          run: g++ -I ./ *.cpp
         
         - name: Install Valgrind
           run: sudo apt-get install valgrind
 
         - name: Run Valgrind
-          run: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.rpt ./program
+          run: |
+            valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.rpt ./a.out
+            cat valgrind.rpt
 
         - name: Archive production artifacts
           uses: actions/upload-artifact@v2

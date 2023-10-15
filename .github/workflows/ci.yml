@@ -18,13 +18,10 @@ jobs:
         - name: Compile
           run: g++ -I ./ *.cpp
         
-        - name: Add homebrew to PATH
-          run: |
-            echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/runner/.bash_profile
-            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
         - name: Install Valgrind
-          run: brew install valgrind
+          run: |
+            sudo apt-get update --fix-missing 
+            sudo apt-get install valgrind
 
         - name: Run Valgrind
           run: |

@@ -1,8 +1,3 @@
-# Create a GitHub Actions Workflow
-# I want you to compile this c++ program
-# I want you to use valgrind as a wrapper for running the binary and perform stress testing
-# I want you to get the valgrind.rpt file outputed from valgrind saved as an artifact
-
 name: C++ CI
 
 on:
@@ -15,19 +10,22 @@ jobs:
         steps:
         - uses: actions/checkout@v2
 
-        - name: Setup C++
-            uses: actions/setup-cpp@v1
-            with:
-                cpp-version: 'latest'
+        # - name: Setup C++
+        #   uses: aminya/setup-cpp@v1
+        #   with:
+        #     compiler: 'gcc'
 
         - name: Compile
-            run: g++ -o program program.cpp
+          run: g++ -o program program.cpp
+        
+        - name: Install Valgrind
+          run: sudo apt-get install valgrind
 
         - name: Run Valgrind
-            run: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.rpt ./program
+          run: valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind.rpt ./program
 
         - name: Archive production artifacts
-            uses: actions/upload-artifact@v2
-            with:
-                name: valgrind-report
-                path: valgrind.rpt
+          uses: actions/upload-artifact@v2
+          with:
+            name: valgrind-report
+            path: valgrind.rpt

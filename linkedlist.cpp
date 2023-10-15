@@ -5,8 +5,6 @@ Purpose: This program is a doubly linked list implementation
 **********************/
 
 #include "linkedlist.h"
-#include "data.h"
-#include <iostream>
 
 LinkedList::LinkedList() {
     head = NULL;
@@ -17,50 +15,21 @@ LinkedList::~LinkedList() {
 }
 
 bool LinkedList::addNode(int id, string* data) {
-    bool result = true;
-    Node* newNode = nullptr;
-    Node* current = nullptr;
-
-    try {
-        if(!isValid(id, data)) {
-            result = false;
-        } else {
-            current = findInsertionPoint(id);
-            if(current && current->data.id == id) {
-                result = false;
-            } else {
-                newNode = createNode(id, data);
-                if(!newNode) {
-                    result = false;
-                } else {
-                    insertNode(newNode, current);
-                }
-            }
+    bool result = false;
+    if(id > 0 && !data->empty()) {
+        Node* current = head;
+        Node* prev = nullptr;
+        while (current && current->data.id < id && current->data.id != id) {
+            prev = current;
+            current = current->next;
         }
-    } catch(const std::invalid_argument& e) {
-        result = false;
+        if (!current || current->data.id != id) {
+            Node* newNode = createNode(id, data);
+            insertNode(newNode, prev, current);
+            result = true;
+        }
     }
-
     return result;
-}
-
-bool LinkedList::isValid(int id, string* data) {
-    if(id <= 0) {
-        throw std::invalid_argument("id must be a positive number greater than 0");
-    }
-    if(data->empty()) {
-        throw std::invalid_argument("data string must not be empty");
-    }
-
-    return true;
-}
-
-Node* LinkedList::findInsertionPoint(int id) {
-    Node* current = head;
-    while(current && current->data.id < id) {
-        current = current->next;
-    }
-    return current;
 }
 
 Node* LinkedList::createNode(int id, string* data) {
@@ -74,26 +43,16 @@ Node* LinkedList::createNode(int id, string* data) {
     return newNode;
 }
 
-void LinkedList::insertNode(Node* newNode, Node* current) {
-    if(current == head) {
-        newNode->next = head;
-        newNode->prev = nullptr;
-        if(head) head->prev = newNode;
+void LinkedList::insertNode(Node* newNode, Node* prev, Node* current) {
+    newNode->next = current;
+    newNode->prev = prev;
+    if (prev) {
+        prev->next = newNode;
+    } else {
         head = newNode;
-    } else if(current) {
-        newNode->next = current;
-        newNode->prev = current->prev;
-        current->prev->next = newNode;
+    }
+    if (current) {
         current->prev = newNode;
-    } else if(current == nullptr) {
-        // Insertion at the end of the list
-        Node* temp = head;
-        while(temp->next != nullptr) {
-            temp = temp->next;
-        }
-        temp->next = newNode;
-        newNode->prev = temp;
-        newNode->next = nullptr;
     }
 }
 

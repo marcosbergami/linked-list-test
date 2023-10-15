@@ -9,9 +9,9 @@ In this program, I will be implementing a stack object that will work with a str
 #define CLASSES_LINKEDLIST_H_
 
 #include "data.h"
+#include <iostream>
 
 class LinkedList {
-    Node *head;
 
     public:
 
@@ -28,11 +28,12 @@ class LinkedList {
     bool exists(int);
 
     private:
-        // Adding additional methods in order to make addNode() more readable and modular
-        bool isValid(int, string*);
-        Node* findInsertionPoint(int);
-        Node* createNode(int, string*);
-        void insertNode(Node*, Node*);
+        
+    Node *head;
+    
+    // Adding additional methods in order to make addNode() more readable and modular
+    Node* createNode(int, string*);
+    void insertNode(Node*, Node*, Node*);
 
 };
 
